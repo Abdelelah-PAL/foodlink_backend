@@ -18,7 +18,7 @@ app.post('/api/meals/generate', async (req, res) => {
             return res.status(400).json({ error: 'Ingredients string is required' });
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash" });
 
         const prompt = `
 You are a master chef. Generate a delicious meal recipe that incorporates the following ingredients: ${ingredients}.
