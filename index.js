@@ -8,6 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 9000;
+if (!process.env.GEMINI_API_KEY) {
+    console.error('CRITICAL ERROR: GEMINI_API_KEY is not defined in .env');
+}
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.get('/', (req, res) => {
@@ -23,7 +27,7 @@ app.post('/api/meals/generate', async (req, res) => {
             return res.status(400).json({ error: 'Ingredients string is required' });
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = `
 You are a master chef. Generate a delicious meal recipe that incorporates the following ingredients: ${ingredients}.
@@ -66,7 +70,11 @@ You must return a JSON array containing a single meal object matching exactly th
         res.json(meals);
     } catch (error) {
         console.error('Error generating meal:', error);
-        res.status(500).json({ error: 'Failed to generate meal', details: error.message });
+        let errorMessage = error.message;
+        if (errorMessage.includes('API key not valid')) {
+            errorMessage = 'Invalid Gemini API Key. Please update your .env file with a valid key from Google AI Studio.';
+        }
+        res.status(500).json({ error: 'Failed to generate meal', details: errorMessage });
     }
 });
 
