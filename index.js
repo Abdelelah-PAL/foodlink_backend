@@ -32,11 +32,13 @@ app.post('/api/meals/generate', async (req, res) => {
         const prompt = `
 You are a master chef. Generate a delicious meal recipe that incorporates the following ingredients: ${ingredients}.
 Feel free to add common pantry elements like salt, pepper, oil, water, etc.
-You must return a JSON array containing a single meal object matching exactly this structure:
+You must return a JSON array containing a single meal object.
+THE JSON MUST REFLECT THIS EXACT STRUCTURE:
 [
   {
     "category_id": 1, 
     "name": "Name of the meal",
+    "image_url": "https://image.pollinations.ai/prompt/professional_food_photography_of_[MEAL_NAME_IN_ENGLISH]_highly_detailed_8k?width=1024&height=1024",
     "ingredients": ["ingredient 1", "ingredient 2", ...],
     "recipe": ["Step 1", "Step 2", ...],
     "user_id": null,
@@ -45,11 +47,10 @@ You must return a JSON array containing a single meal object matching exactly th
     "type_id": 1
   }
 ]
-- "category_id" should be an integer between 1 and 5.
-- "type_id" should be an integer between 1 and 3.
-- Ensure the result is valid JSON.
-- Do NOT wrap the JSON in Markdown block quotes (like \`\`\`json). Return raw JSON text only.
-- IMPORTANT: The translation for 'name', 'ingredients', and 'recipe' must match the language of the provided ingredients (${ingredients}).
+- IMPORTANT: The "image_url" field is MANDATORY.
+- For "image_url", replace [MEAL_NAME_IN_ENGLISH] with a URL-friendly English translation of the meal name (using plus signs for spaces).
+- Ensure "name", "ingredients", and "recipe" are in the language of the provided ingredients (${ingredients}).
+- Return ONLY raw JSON text. No markdown formatting.
 `;
 
         console.log('Generating content with prompt length:', prompt.length);
