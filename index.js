@@ -1,82 +1,46 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const connectDB = require('./src/config/db');
+
+// Route imports
+const authRoutes = require('./src/routes/authRoutes');
+const mealRoutes = require('./src/routes/mealRoutes');
+const categoryRoutes = require('./src/routes/categoryRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
+const featureRoutes = require('./src/routes/featureRoutes');
+const articleRoutes = require('./src/routes/articleRoutes');
+const sliderRoutes = require('./src/routes/sliderRoutes');
+const notificationRoutes = require('./src/routes/notificationRoutes');
+
+// Initialize Database
+connectDB();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 9000;
-if (!process.env.GEMINI_API_KEY) {
-    console.error('CRITICAL ERROR: GEMINI_API_KEY is not defined in .env');
-}
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
+// Health check route
 app.get('/', (req, res) => {
-    res.send('Backend is running');
+    res.send('Foodlink Full Stack Backend is running');
 });
 
-app.post('/api/meals/generate', async (req, res) => {
-    try {
-        console.log('Incoming request to /api/meals/generate:', req.body);
-        const { ingredients } = req.body;
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/meals', mealRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/features', featureRoutes);
+app.use('/api/articles', articleRoutes);
+app.use('/api/sliders', sliderRoutes);
+app.use('/api/notifications', notificationRoutes);
 
-        if (!ingredients || typeof ingredients !== 'string') {
-            return res.status(400).json({ error: 'Ingredients string is required' });
-        }
-
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
-
-        const prompt = `
-You are a master chef. Generate a delicious meal recipe that incorporates the following ingredients: ${ingredients}.
-Feel free to add common pantry elements like salt, pepper, oil, water, etc.
-You must return a JSON array containing a single meal object.
-THE JSON MUST REFLECT THIS EXACT STRUCTURE:
-[
-  {
-    "category_id": 1, 
-    "name": "Name of the meal",
-    "image_url": "https://image.pollinations.ai/prompt/professional_food_photography_of_[MEAL_NAME_IN_ENGLISH]_highly_detailed_8k?width=1024&height=1024",
-    "ingredients": ["ingredient 1", "ingredient 2", ...],
-    "recipe": ["Step 1", "Step 2", ...],
-    "user_id": null,
-    "is_favorite": false,
-    "source": "AI Generated",
-    "type_id": 1
-  }
-]
-- IMPORTANT: The "image_url" field is MANDATORY.
-- For "image_url", replace [MEAL_NAME_IN_ENGLISH] with a URL-friendly English translation of the meal name (using plus signs for spaces).
-- Ensure "name", "ingredients", and "recipe" are in the language of the provided ingredients (${ingredients}).
-- Return ONLY raw JSON text. No markdown formatting.
-`;
-
-        console.log('Generating content with prompt length:', prompt.length);
-        const result = await model.generateContent(prompt);
-        console.log('Gemini API call completed.');
-        const responseText = result.response.text().trim();
-
-        let meals;
-        try {
-            meals = JSON.parse(responseText);
-        } catch (e) {
-            console.warn('JSON parse failed, attempting cleanup.');
-            const cleanedText = responseText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-            meals = JSON.parse(cleanedText);
-        }
-
-        console.log('Successfully generated meal:', meals[0]?.name);
-        res.json(meals);
-    } catch (error) {
-        console.error('Error generating meal:', error);
-        let errorMessage = error.message;
-        if (errorMessage.includes('API key not valid')) {
-            errorMessage = 'Invalid Gemini API Key. Please update your .env file with a valid key from Google AI Studio.';
-        }
-        res.status(500).json({ error: 'Failed to generate meal', details: errorMessage });
-    }
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!', details: err.message });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
