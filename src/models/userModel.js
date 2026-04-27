@@ -7,6 +7,17 @@ const userSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+    email: {
+        type: String,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        sparse: true // Allow null for old users if any
+    },
+    name: {
+        type: String,
+        trim: true
+    },
     password: {
         type: String,
         required: [true, 'Password is required']

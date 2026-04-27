@@ -53,9 +53,25 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const getAdminProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ error: 'Admin not found' });
+
+        res.json({
+            admin_id: user._id,
+            email: user.email || '',
+            name: user.name || user.username
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch admin profile' });
+    }
+};
+
 module.exports = {
     getDashboardStats,
     getUnpublishedMeals,
     approveMeal,
-    getAllUsers
+    getAllUsers,
+    getAdminProfile
 };

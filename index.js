@@ -12,6 +12,7 @@ const featureRoutes = require('./src/routes/featureRoutes');
 const articleRoutes = require('./src/routes/articleRoutes');
 const sliderRoutes = require('./src/routes/sliderRoutes');
 const notificationRoutes = require('./src/routes/notificationRoutes');
+const onboardingRoutes = require('./src/routes/onboardingRoutes');
 
 // Initialize Database
 connectDB();
@@ -36,6 +37,7 @@ app.use('/api/features', featureRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/sliders', sliderRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
