@@ -24,11 +24,11 @@ const seedData = async () => {
         await Onboarding.deleteMany();
 
         const categories = [
-            { name: 'Breakfast', icon_url: 'https://example.com/icons/breakfast.png' },
-            { name: 'Lunch', icon_url: 'https://example.com/icons/lunch.png' },
-            { name: 'Dinner', icon_url: 'https://example.com/icons/dinner.png' },
-            { name: 'Snacks', icon_url: 'https://example.com/icons/snacks.png' },
-            { name: 'Appetizers', icon_url: 'https://example.com/icons/appetizers.png' }
+            { id: 1, name: 'Breakfast', image_url: 'https://example.com/icons/breakfast.png', meals_name: 'Breakfast Meals' },
+            { id: 2, name: 'Lunch', image_url: 'https://example.com/icons/lunch.png', meals_name: 'Lunch Meals' },
+            { id: 3, name: 'Dinner', image_url: 'https://example.com/icons/dinner.png', meals_name: 'Dinner Meals' },
+            { id: 4, name: 'Snacks', image_url: 'https://example.com/icons/snacks.png', meals_name: 'Snacks' },
+            { id: 5, name: 'Appetizers', image_url: 'https://example.com/icons/appetizers.png', meals_name: 'Appetizers' }
         ];
 
         const features = [

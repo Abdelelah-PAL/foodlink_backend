@@ -11,8 +11,8 @@ const getCategories = async (req, res) => {
 
 const createCategory = async (req, res) => {
     try {
-        const { name, icon_url } = req.body;
-        const category = await Category.create({ name, icon_url });
+        const { id, name, image_url, meals_name } = req.body;
+        const category = await Category.create({ id, name, image_url, meals_name });
         res.status(201).json(category);
     } catch (error) {
         res.status(400).json({ error: 'Failed to create category', details: error.message });

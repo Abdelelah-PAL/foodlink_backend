@@ -24,8 +24,20 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'cooker'],
         default: 'user'
+    },
+    user_type_id: {
+        type: Number,
+        default: 2 // 2 for user, 1 for cooker
+    },
+    subscriber: {
+        type: Boolean,
+        default: false
+    },
+    image_url: {
+        type: String,
+        default: null
     },
     allergies: [{
         type: String

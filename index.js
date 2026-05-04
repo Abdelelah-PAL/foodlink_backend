@@ -13,6 +13,10 @@ const articleRoutes = require('./src/routes/articleRoutes');
 const sliderRoutes = require('./src/routes/sliderRoutes');
 const notificationRoutes = require('./src/routes/notificationRoutes');
 const onboardingRoutes = require('./src/routes/onboardingRoutes');
+const taskRoutes = require('./src/routes/taskRoutes');
+const weeklyPlanRoutes = require('./src/routes/weeklyPlanRoutes');
+const settingsRoutes = require('./src/routes/settingsRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 
 // Initialize Database
 connectDB();
@@ -20,6 +24,10 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from uploads directory
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 9000;
 
@@ -38,6 +46,10 @@ app.use('/api/articles', articleRoutes);
 app.use('/api/sliders', sliderRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/weekly-plans', weeklyPlanRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

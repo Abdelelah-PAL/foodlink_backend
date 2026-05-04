@@ -4,6 +4,7 @@ const authService = require('../services/authService');
 const registerUser = async (req, res) => {
     try {
         const { username, password, role } = req.body;
+        console.log(req.body)
 
         const userExists = await User.findOne({ username });
         if (userExists) {
@@ -31,6 +32,7 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log(req.body)
 
         const user = await User.findOne({ username });
         if (user && (await authService.comparePassword(password, user.password))) {
