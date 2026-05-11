@@ -61,7 +61,7 @@ const getAdminProfile = async (req, res) => {
         res.json({
             admin_id: user._id,
             email: user.email || '',
-            name: user.name || user.username
+            name: user.name || user.username || user.email
         });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch admin profile' });

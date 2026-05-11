@@ -24,8 +24,11 @@ const upload = multer({ storage });
 router.use(protect);
 
 router.get('/:id', userController.getUser);
+router.get('/email/:email', userController.getUsersByEmail);
 router.put('/:id', userController.updateUser);
+router.post('/update-username', userController.updateUsername);
 router.post('/change-password', userController.changePassword);
 router.post('/upload-image', upload.single('image'), userController.uploadProfileImage);
+
 
 module.exports = router;

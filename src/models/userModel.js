@@ -3,16 +3,13 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: [true, 'Username is required'],
-        unique: true,
         trim: true
     },
     email: {
         type: String,
-        unique: true,
+        required: [true, 'Email is required'],
         trim: true,
-        lowercase: true,
-        sparse: true // Allow null for old users if any
+        lowercase: true
     },
     name: {
         type: String,
@@ -49,5 +46,7 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+userSchema.index({ email: 1, role: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', userSchema);

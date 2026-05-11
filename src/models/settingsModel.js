@@ -2,9 +2,8 @@ const mongoose = require('mongoose');
 
 const settingsSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
-    notifications: { type: Boolean, default: true },
-    updates: { type: Boolean, default: true },
-    language: { type: String, default: 'en' }
+    active_notifications: { type: Boolean, default: true },
+    active_updates: { type: Boolean, default: true },
 }, {
     timestamps: true
 });
